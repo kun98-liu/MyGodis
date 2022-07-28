@@ -65,9 +65,9 @@ func (b *BitMap) GetValue(offset int64) byte {
 */
 func getByteSize(bitSize int64) int64 {
 	if bitSize%8 == 0 {
-		return bitSize % 8
+		return bitSize / 8
 	} else {
-		return bitSize%8 + 1
+		return bitSize/8 + 1
 	}
 }
 
