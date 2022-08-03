@@ -1,6 +1,6 @@
 package list
 
-//A LinkedList struct keeps the poiner to the head and tail, which are neither dummy node.
+//A LinkedList struct keeps the pointer to the head and tail, which are neither dummy node.
 type LinkedList struct {
 	head *node
 	tail *node
@@ -109,4 +109,89 @@ func (list *LinkedList) Insert(index int, val interface{}) {
 	pivot.prev = n
 	list.size++
 
+}
+
+//Remove node
+func (list *LinkedList) removeNode(n *node) {
+	if n.prev == nil {
+		list.head = n.next
+	} else {
+		n.prev.next = n.next
+	}
+
+	if n.next == nil {
+		list.tail = n.prev
+	} else {
+		n.next.prev = n.prev
+	}
+
+	n.prev = nil
+	n.next = nil
+
+	list.size--
+}
+
+//Remove node by the given node, and return the val of this node
+func (list *LinkedList) Remove(index int) (val interface{}) {
+	if list == nil {
+		panic("list does not exist")
+	}
+
+	if index < 0 || index >= list.size {
+		panic("index out of bound")
+	}
+
+	n := list.findByIndex(index)
+
+	list.removeNode(n)
+
+	return n.val
+}
+
+func (list *LinkedList) RemoveLast() (val interface{}) {
+	if list == nil {
+		panic("list does not exist")
+	}
+
+	n := list.tail
+
+	list.removeNode(n)
+
+	return n.val
+}
+
+func (list *LinkedList) Len() int {
+	if list == nil {
+		panic("list does not exist")
+	}
+	return list.size
+}
+
+func (list *LinkedList) ForEach(consumer func(int, interface{}) bool) {
+	if list == nil {
+		panic("list does not exist")
+	}
+
+	n := list.head
+	i := 0
+
+	for n != nil {
+		goNext := consumer(i, n.val)
+
+		if !goNext {
+			break
+		}
+
+		i++
+		n = n.next
+	}
+}
+
+func Make(vals ...interface{}) *LinkedList {
+	list := LinkedList{}
+
+	for _, v := range vals {
+		list.Add(v)
+	}
+	return &list
 }
