@@ -58,6 +58,7 @@ func ListenAndServe(listener net.Listener, handler tcp.Handler, closeChan chan s
 	defer func() {
 		_ = listener.Close()
 		_ = handler.Close()
+		logger.Info("shutting down anyway...")
 	}()
 
 	ctx := context.Background()
@@ -74,7 +75,9 @@ func ListenAndServe(listener net.Listener, handler tcp.Handler, closeChan chan s
 		go func() {
 			defer func() {
 				waitDone.Done()
+				logger.Info("Handler finished its task")
 			}()
+			logger.Info("Handler start to handle task")
 			handler.Handle(ctx, conn)
 		}()
 	}
