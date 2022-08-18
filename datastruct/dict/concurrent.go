@@ -208,7 +208,6 @@ func (dict *ConcurrentDict) ForEach(consumer Consumer) {
 	for _, shard := range dict.table {
 		shard.mutex.RLock()
 
-		defer shard.mutex.RUnlock()
 		for k, v := range shard.m {
 			ok := consumer(k, v)
 			if !ok {
@@ -216,6 +215,7 @@ func (dict *ConcurrentDict) ForEach(consumer Consumer) {
 			}
 		}
 
+		shard.mutex.RUnlock()
 	}
 }
 
