@@ -187,6 +187,38 @@ func (list *LinkedList) ForEach(consumer func(int, interface{}) bool) {
 	}
 }
 
+//[start,stop)
+func (list *LinkedList) Range(start int, stop int) []interface{} {
+	if list == nil {
+		panic("list is nil")
+	}
+	if start < 0 || start >= list.size || stop >= list.size || stop < start {
+		panic("index out of boundary")
+	}
+
+	sliceSize := stop - start
+	slice := make([]interface{}, sliceSize)
+
+	n := list.head
+	i := 0
+
+	for n != nil && i < start {
+		n = n.next
+		i++
+	}
+
+	for i < stop {
+		if n != nil {
+			slice = append(slice, n.val)
+		} else {
+			break
+		}
+		i++
+		n = n.next
+	}
+	return slice
+}
+
 func Make(vals ...interface{}) *LinkedList {
 	list := LinkedList{}
 
